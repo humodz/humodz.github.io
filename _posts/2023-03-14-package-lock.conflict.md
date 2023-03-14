@@ -29,7 +29,7 @@ What the recipe above does is copy over the `package-lock.json` from the incomin
 
 ## Why bother comitting the package-lock.json?
 
-The main benefit, in conjunction with `npm ci`, is making the installation of dependencies reproducible. `npm install` may try to update dependencies if possible. This is usually not a problem, but may cause your build and deploy pipeline to fail if a dependency releases a broken update, [like it happened with aws-sdk a few months ago](https://github.com/aws/aws-sdk-js-v3/issues/4060).
+The main benefit, in conjunction with `npm ci`, is making the installation of dependencies reproducible. `npm install` may try to update dependencies if possible. This is usually not a problem, but may cause your deployment pipeline to fail if a dependency releases a broken update, [like it happened with aws-sdk a few months ago](https://github.com/aws/aws-sdk-js-v3/issues/4060).
 
 Having a lockfile commited and using `npm ci` in place of `npm install` in your deployment pipeline will protect you from this kind of problem.
 
