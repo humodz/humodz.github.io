@@ -21,10 +21,10 @@ After that, as a sanity check, validate if your project still builds and runs.
 
 ## What does that do?
 
-Most of the time, conflicts in lockfiles happen because your branch and the incoming branch (that is, the branch you're merging into yours)
-both have changed the project's dependencies, be that adding, removing or existing ones.
+Most of the time, conflicts in lockfiles happen because your branch and the incoming branch (that is, the branch that's being merged into yours)
+both changed the project's dependencies, be that adding, removing or changing existing ones.
 
-What the recipe does is copy over the `package-lock.json` from the incoming branch, and then update it with the dependency changes in your branch.
+What the recipe above does is copy over the `package-lock.json` from the incoming branch, and then update it with the dependency changes in your branch.
 
 
 ## Why bother comitting the package-lock.json?
