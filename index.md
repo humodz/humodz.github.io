@@ -1,4 +1,1 @@
----
-title: blog
----
-This is a blog
+A personal blog
