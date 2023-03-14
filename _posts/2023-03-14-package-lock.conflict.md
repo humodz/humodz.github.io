@@ -22,6 +22,51 @@ After that, as a sanity check, validate if your project still builds and runs.
 ## What does that do?
 
 Most of the time, conflicts in lockfiles happen because your branch and the incoming branch (that is, the branch you're merging into yours)
-both have changed the dependencies, be that adding, removing or existing ones.
+both have changed the project's dependencies, be that adding, removing or existing ones.
 
 What the recipe does is copy over the `package-lock.json` from the incoming branch, and then update it with the dependency changes in your branch.
+
+
+## Why bother comitting the package-lock.json?
+
+The main benefit, in conjunction with `npm ci`, is making the installation of dependencies reproducible. `npm install` may try to update dependencies if possible. This is usually not a problem, but may cause your build and deploy pipeline to fail if a dependency releases a broken update, [like it happened with aws-sdk a few months ago](https://github.com/aws/aws-sdk-js-v3/issues/4060).
+
+Having a lockfile commited and using `npm ci` in place of `npm install` in your deployment pipeline will protect you from this kind of problem.
+
+
+## Other Recommendations
+
+- Avoid having more than one type of lockfile committed (for example, both `package-lock.json` and `yarn.lock`), and by extension avoid using multiple dependency managers in the same project. Discuss with your teammates which dependency manager you're all going to use, and only use that
+- Use [NVM](https://github.com/nvm-sh/nvm) for managing multiple Node versions. This might come in handy if you have a project that only works with an older version, but would like to use a more updated one the rest of the time.
+- For more future-proofing, also document the version of NPM and Node you're using:
+
+In `package.json` (replace with whatever version your project uses)
+
+Example: setting a minimum version:
+
+```json
+{
+  "engines" : {
+    "npm" : ">=8.0.0",
+    "node" : ">=16.0.0"
+  }
+}
+```
+
+Example: setting a maximum version (for old projects, that don't work with newer versions):
+
+```json
+{
+  "engines" : {
+    "node" : ">=8.0.0 <9.0.0"
+  }
+}
+```
+
+If using NVM, in `.nvmrc` put the output of `node -v`:
+
+```
+v16.14.2
+```
+
+This will automatically be picked up when you run `nvm use`.
