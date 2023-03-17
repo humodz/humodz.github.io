@@ -1,5 +1,8 @@
+title: "humodz"
+
 remote_theme: jekyll/minima
 minima:
   skin: dark
 
-title: "humodz"
+plugins:
+  - github-pages
