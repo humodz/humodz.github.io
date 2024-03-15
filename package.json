@@ -1,0 +1,16 @@
+{
+  "name": "humodz.github.io",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/humodz/humodz.github.io.git"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "mkdir -p dist && cp index.html dist",
+    "deploy": "gh-pages -d dist"
+  },
+  "dependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}
