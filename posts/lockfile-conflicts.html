@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/css/simple.css" />
+        <link rel="stylesheet" href="/css/styles.css" />
+        <title>Resolving conflicts in package-lock.json</title>
+    </head>
+    <body>
+        <main><h1>Resolving conflicts in package-lock.json</h1>
+<pre><code class="language-sh">git checkout --theirs -- package-lock.json
+npm install
+</code></pre>
+<p>That's it.</p>
+<p>Say you've worked on a <code>feature-branch</code>, but want to bring in changes from <code>master</code>.
+<code>git checkout --theirs</code> will make it seem that you branched off after the new changes were already there.</p>
+<p>Do not try manually editing package-lock.json. It’s huge and not meant for manual edits.</p>
+<p>You might have considered not committing package-lock.json to avoid dealing with this. However, comitting it and using <code>npm ci</code> has a huge benefit: it makes your builds reproducible, by ensuring
+the exact same packages will be installed every time.</p>
+<p>Without package-lock.json and <code>npm ci</code>, npm might install newer versions
+of your dependencies - remember that <code>&quot;some-lib&quot;: &quot;^1.0.0&quot;</code> means npm will look for some-lib <code>&gt;= 1.0.0, &lt; 2.0.0</code>. It doesn't
+force npm to install <code>1.0.0</code> specifically.</p>
+<p>I've been bit before on a project that didn't use <code>npm ci</code>, when <a href="https://github.com/aws/aws-sdk-js-v3/issues/5014">AWS SDK released a broken version</a>. Suddenly, all pipelines started failing.</p>
+<p>As an aside, if you're caching <code>node_modules</code> in your CI/CD pipeline, consider caching <code>~/.npm</code> instead:</p>
+<ul>
+<li>it's smaller</li>
+<li>no extra configuration needed for workspaces (which can have multiple node_modules folders)</li>
+<li>if there's other commands on your pipeline that might fetch dependencies to different places, all of them will benefit from it</li>
+</ul>
+<p>So, in a nutshell:</p>
+<ul>
+<li>always commit package-lock.json</li>
+<li>in your CI/CD pipeline, use <code>npm ci</code>, not <code>npm install</code></li>
+<li>cache <code>~/.npm</code>, not <code>node_modules</code></li>
+</ul>
+</main>
+    </body>
+</html>

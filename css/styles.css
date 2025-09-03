@@ -1,0 +1,15 @@
+:root {
+    --accent-dark: hsl(from var(--accent) h s calc(l - 10));
+}
+
+a:visited {
+    color: var(--accent-dark);
+}
+
+h1 {
+    font-size: 1.6em;
+}
+
+h2 {
+    font-size: 1.2em;
+}
