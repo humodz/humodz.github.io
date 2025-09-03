@@ -26,9 +26,9 @@ h2 {
 <li><a href="#json">JSON</a></li>
 </ul>
 <h2 id="booleannumberst" tabindex="-1"><code>boolean</code>/<code>number</code>/<code>string</code> vs Boolean/Number/String</h2>
-<p>The first three encompass only the primitives values, such as <code>true</code>, <code>false</code>, <code>123</code>, <code>&quot;hello&quot;</code>, and so on.
-The latter three, on the other hand, are interfaces. For example, for an object to be assignable to <code>Boolean</code>,
-it only needs a <code>valueOf(): boolean</code> method, since it's the only boolean-specific method:</p>
+<p>The first three covert primitives values, such as <code>true</code>, <code>false</code>, <code>123</code>, <code>&quot;hello&quot;</code>, and so on.</p>
+<p>The latter three, on the other hand, are interfaces. For an object to be assignable to <code>Boolean</code>,
+it just needs a <code>valueOf(): boolean</code> method:</p>
 <pre><code class="language-ts">const example1: Boolean = {
     valueOf() {
         return true;
@@ -51,7 +51,6 @@ const example2: Number = {
 };
 </code></pre>
 <p>In most cases, Boolean/Number/String are used by mistake, where <code>boolean</code>/<code>number</code>/<code>string</code> should have been used instead.</p>
-<br />
 <h2 id="void" tabindex="-1">void</h2>
 <p>Any value can be assigned to void; it indicates that the return value of a function will not be used.</p>
 <p>It's intended for one-liner callbacks, like so:</p>
