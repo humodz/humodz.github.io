@@ -4,8 +4,8 @@
 
 ## Posts
 
-{{#posts}}
+{{#each posts}}
 
 - [{{title}}]({{url}})
 
-{{/posts}}
+{{/each}}

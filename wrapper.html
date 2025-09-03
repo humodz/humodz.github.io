@@ -11,8 +11,13 @@
     <body>
         <main>{{{content}}}</main>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-        <script src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/typescript.min.js"></script>
-        <script>hljs.highlightAll();</script>
+        {{#each code_langs}}
+            <script foo="{{this}}" src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/{{this}}.min.js"></script>
+        {{/each}}
+
+        {{#if code_langs}}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+            <script>hljs.highlightAll();</script>
+        {{/if}}
     </body>
 </html>

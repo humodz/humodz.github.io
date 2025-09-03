@@ -7,6 +7,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import matter from 'gray-matter';
 import mustache from 'mustache';
+import Handlebars from 'handlebars';
 
 function renderMarkdown({ wrapper, patterns, outDir, markdownSettings }) {
     const md = new markdownit(markdownSettings)
@@ -40,7 +41,7 @@ function renderMarkdown({ wrapper, patterns, outDir, markdownSettings }) {
     const pagesByType = groupBy(allPages, (it) => it.type ?? '?');
 
     for (const page of allPages) {
-        const contentMd = mustache.render(page.content, {
+        const contentMd = renderTemplate(page.content, {
             ...page,
             pages: allPages,
             ...pagesByType,
@@ -48,7 +49,7 @@ function renderMarkdown({ wrapper, patterns, outDir, markdownSettings }) {
 
         const contentHtml = md.render(contentMd);
 
-        const rendered = mustache.render(wrapperTemplate, {
+        const rendered = renderTemplate(wrapperTemplate, {
             ...page,
             content: contentHtml,
         });
@@ -56,6 +57,10 @@ function renderMarkdown({ wrapper, patterns, outDir, markdownSettings }) {
         const outFile = path.join(outDir, page.url + '.html');
         save(outFile, rendered);
     }
+}
+
+function renderTemplate(template, data) {
+    return Handlebars.compile(template)(data);
 }
 
 function save(dest, content) {

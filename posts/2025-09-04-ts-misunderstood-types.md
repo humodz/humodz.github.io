@@ -1,7 +1,9 @@
 ---
-title: 'TypeScript: sometimes-misunderstood types'
+title: 'TypeScript: commonly misused types'
 slug: ts-misunderstood-types
 type: posts
+code_langs:
+    - typescript
 ---
 
 <style>
@@ -51,22 +53,22 @@ const example2: Number = {
 };
 ```
 
-In most cases, Boolean/Number/String are used by mistake, where `boolean`/`number`/`string` should have been used instead.
+In most cases, Boolean/Number/String are used by mistake where `boolean`/`number`/`string` was the intention.
 
 ## void
 
-Any value can be assigned to void; it indicates that the return value of a function will not be used.
+Any value can be assigned to void, it indicates that the return value of a function will not be used by the caller.
 
-It's intended for one-liner callbacks, like so:
+It's used to support one-liner callbacks, like so:
 
 ```ts
 function forEach(items: string[], fn: (value: string) => undefined) {
     for (const item of items) {
-        fn(item)
+        fn(item);
     }
 }
 
-let joined = ''
+let joined = '';
 const words = ['hello', 'world'];
 
 forEach(words, word => joined += ' ' + word)
@@ -78,9 +80,9 @@ We can fix the error by changing the signature to `fn: (value: string) => void`.
 
 ## never
 
-`never` is also intended as a return type, this time signalling that a function never returns.
+`never` is also commonly used as a return type, this time signalling that a function never returns.
 
-It's meant to be used in functions that always throw, call `process.exit()`, or terminate execution in a similar way.
+It's should be used in functions that always throw, call `process.exit()`, or terminate execution somehow.
 
 ```ts
 function fail(message: string) {
@@ -112,7 +114,7 @@ const user2: { name: string } = user;
 const user3: {} = user;
 ```
 
-TypeScript only complains about excess properties in a few scenarios, where there's likely a mistake:
+TypeScript only complains about excess properties in a few scenarios, when it's likely a mistake:
 
 ```ts
 function example(data: { name: string, role?: string }) {}
@@ -136,9 +138,9 @@ class Person {
 const person: Person = { name: 'john' };
 ```
 
-The above snippet typechecks and works as intended. TypeScript is a structurally typed-language, which means that for two types to be compatible, they just need to have the same properties.
+The above snippet typechecks is intended behavior. TypeScript is a structurally typed-language, which means that for two types to be compatible, they just need to have the same properties.
 
-In this case, an object is assingnable to the instance type of a class as long as it has all the required properties. It doesn't need to be an actual instance of the class.
+In this case, an object is assignable to `Person` as long as it has the same properties. It doesn't need to have been created via `new Person()`.
 
 This is in stark constrast to languages like Java, where even two identical classes aren't assignable to each other.
 
@@ -154,7 +156,8 @@ function fetchInfo(): Promise<JSON> {
 }
 ```
 
-The `JSON` type is just the methods of the global `JSON` object, as in `{ parse(data: string): any, stringify(data: any): string }`.
+The `JSON` type is just the type of the global `JSON` object, as in `{ parse(data: string): any, stringify(data: any): string }`.
+There's really no value in using it.
 
 ```ts
 // This typechecks, but makes no sense and probably isn't what was intended.
@@ -165,10 +168,20 @@ info.parse("123");
 
 There isn't a "JSON data" type, simply because JSON is a way encoding JS objects, and not a type in itself.
 
-The correct way to type the previous function would be:
+The correct way to declare the previous function would be:
 
 ```ts
 function fetchInfo(): Promise<unknown> {
+    return fetch('/info').then(res => res.json())
+}
+
+// or
+
+interface Info {
+    // ...
+}
+
+function fetchInfo(): Promise<Info> {
     return fetch('/info').then(res => res.json())
 }
 ```

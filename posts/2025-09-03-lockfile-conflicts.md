@@ -2,11 +2,13 @@
 title: Resolving conflicts in package-lock.json
 slug: lockfile-conflicts
 type: posts
+code_langs:
+    - bash
 ---
 
 # {{title}}
 
-```sh
+```bash
 git checkout --theirs -- package-lock.json
 npm install
 ```
