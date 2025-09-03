@@ -2,14 +2,23 @@
 
 import { sync as glob } from 'globby';
 import markdownit from 'markdown-it';
+import anchorPlugin from 'markdown-it-anchor';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import matter from 'gray-matter';
 import mustache from 'mustache';
 
 function renderMarkdown({ wrapper, patterns, outDir, markdownSettings }) {
-    const md = new markdownit(markdownSettings);
-    const files = glob(patterns);
+    const md = new markdownit(markdownSettings)
+        .use(anchorPlugin, {
+            slugify: s => String(s)
+                .trim()
+                .replace(/[^A-Za-z0-9\-_.!~*'()]/g, '')
+                .slice(0, 15)
+                .toLowerCase(),
+        });
+
+    const files = glob(patterns).sort();
 
     const wrapperTemplate = fs.readFileSync(wrapper, 'utf-8');
 
@@ -79,3 +88,4 @@ renderMarkdown({
         linkfiy: true,
     },
 });
+console.log('Build successful');

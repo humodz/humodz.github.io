@@ -10,7 +10,8 @@
         "clean": "rm -rf dist",
         "build": "bin/build.sh",
         "dev": "bin/dev.sh",
-        "deploy": "gh-pages -d dist --nojekyll"
+        "release": "gh-pages -d dist --nojekyll",
+        "clean-release": "npm run clean && npm run build && npm run release"
     },
     "dependencies": {
         "@types/node": "^24.3.0",
@@ -19,6 +20,7 @@
         "gray-matter": "^4.0.3",
         "http-server": "^14.1.1",
         "markdown-it": "^14.1.0",
+        "markdown-it-anchor": "^9.2.0",
         "mustache": "^4.2.0",
         "prettier": "^3.6.2"
     }
