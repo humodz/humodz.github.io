@@ -5,10 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/css/simple.css" />
         <link rel="stylesheet" href="/css/styles.css" />
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css"> -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/obsidian.min.css">
         <title>Resolving conflicts in package-lock.json</title>
     </head>
     <body>
-        <main><h1>Resolving conflicts in package-lock.json</h1>
+        <main><h1 id="resolvingconfli" tabindex="-1">Resolving conflicts in package-lock.json</h1>
 <pre><code class="language-sh">git checkout --theirs -- package-lock.json
 npm install
 </code></pre>
@@ -35,5 +37,9 @@ force npm to install <code>1.0.0</code> specifically.</p>
 <li>cache <code>~/.npm</code>, not <code>node_modules</code></li>
 </ul>
 </main>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/typescript.min.js"></script>
+        <script>hljs.highlightAll();</script>
     </body>
 </html>
