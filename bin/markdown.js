@@ -32,6 +32,7 @@ function renderMarkdown({ wrapper, patterns, outDir, markdownSettings }) {
 
     for (const page of allPages) {
         const contentMd = mustache.render(page.content, {
+            ...page,
             pages: allPages,
             ...pagesByType,
         });

@@ -5,5 +5,7 @@
 ## Posts
 
 {{#posts}}
+
 - [{{title}}]({{url}})
+
 {{/posts}}
