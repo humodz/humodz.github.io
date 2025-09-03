@@ -1,16 +1,25 @@
 {
-  "name": "humodz.github.io",
-  "version": "1.0.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/humodz/humodz.github.io.git"
-  },
-  "scripts": {
-    "clean": "rm -rf dist",
-    "build": "mkdir -p dist && cp index.html dist",
-    "deploy": "gh-pages -d dist"
-  },
-  "dependencies": {
-    "gh-pages": "^6.3.0"
-  }
+    "type": "module",
+    "name": "humodz.github.io",
+    "version": "1.0.0",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/humodz/humodz.github.io.git"
+    },
+    "scripts": {
+        "clean": "rm -rf dist",
+        "build": "bin/build.sh",
+        "dev": "bin/dev.sh",
+        "deploy": "gh-pages -d dist --nojekyll"
+    },
+    "dependencies": {
+        "@types/node": "^24.3.0",
+        "chokidar-cli": "^3.0.0",
+        "gh-pages": "^6.3.0",
+        "gray-matter": "^4.0.3",
+        "http-server": "^14.1.1",
+        "markdown-it": "^14.1.0",
+        "mustache": "^4.2.0",
+        "prettier": "^3.6.2"
+    }
 }
