@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="/css/simple.css" />
         <link rel="stylesheet" href="/css/styles.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/stackoverflow-dark.min.css">
-        <title>TypeScript: sometimes-misunderstood types</title>
+        <title>TypeScript: commonly misused types</title>
     </head>
     <body>
         <main><style>
@@ -14,7 +14,7 @@ h2 {
     padding-top: 1.5rem;
 }
 </style>
-<h1 id="typescriptsomet" tabindex="-1">TypeScript: sometimes-misunderstood types</h1>
+<h1 id="typescriptcommo" tabindex="-1">TypeScript: commonly misused types</h1>
 <h2 id="tableofcontents" tabindex="-1">Table of Contents</h2>
 <ul>
 <li><a href="#booleannumberst"><code>boolean</code>/<code>number</code>/<code>string</code> vs Boolean/Number/String</a></li>
@@ -49,17 +49,17 @@ const example2: Number = {
     }
 };
 </code></pre>
-<p>In most cases, Boolean/Number/String are used by mistake, where <code>boolean</code>/<code>number</code>/<code>string</code> should have been used instead.</p>
+<p>In most cases, Boolean/Number/String are used by mistake where <code>boolean</code>/<code>number</code>/<code>string</code> was the intention.</p>
 <h2 id="void" tabindex="-1">void</h2>
-<p>Any value can be assigned to void; it indicates that the return value of a function will not be used.</p>
-<p>It's intended for one-liner callbacks, like so:</p>
+<p>Any value can be assigned to void, it indicates that the return value of a function will not be used by the caller.</p>
+<p>It's used to support one-liner callbacks, like so:</p>
 <pre><code class="language-ts">function forEach(items: string[], fn: (value: string) =&gt; undefined) {
     for (const item of items) {
-        fn(item)
+        fn(item);
     }
 }
 
-let joined = ''
+let joined = '';
 const words = ['hello', 'world'];
 
 forEach(words, word =&gt; joined += ' ' + word)
@@ -68,8 +68,8 @@ forEach(words, word =&gt; joined += ' ' + word)
 </code></pre>
 <p>We can fix the error by changing the signature to <code>fn: (value: string) =&gt; void</code>. Another valid option is <code>fn: (value: string) =&gt; unknown</code>, but <code>void</code> signals that <code>forEach</code> won't use the callback's result.</p>
 <h2 id="never" tabindex="-1">never</h2>
-<p><code>never</code> is also intended as a return type, this time signalling that a function never returns.</p>
-<p>It's meant to be used in functions that always throw, call <code>process.exit()</code>, or terminate execution in a similar way.</p>
+<p><code>never</code> is also commonly used as a return type, this time signalling that a function never returns.</p>
+<p>It's should be used in functions that always throw, call <code>process.exit()</code>, or terminate execution somehow.</p>
 <pre><code class="language-ts">function fail(message: string) {
     console.error(`Failure:`, message);
     throw new Error(message);
@@ -93,7 +93,7 @@ function example(data: { url?: string }): string {
 const user2: { name: string } = user;
 const user3: {} = user;
 </code></pre>
-<p>TypeScript only complains about excess properties in a few scenarios, where there's likely a mistake:</p>
+<p>TypeScript only complains about excess properties in a few scenarios, when it's likely a mistake:</p>
 <pre><code class="language-ts">function example(data: { name: string, role?: string }) {}
 
 example({ name: 'john', title: 'admin' });
@@ -111,8 +111,8 @@ example({ name: 'john', title: 'admin' });
 
 const person: Person = { name: 'john' };
 </code></pre>
-<p>The above snippet typechecks and works as intended. TypeScript is a structurally typed-language, which means that for two types to be compatible, they just need to have the same properties.</p>
-<p>In this case, an object is assingnable to the instance type of a class as long as it has all the required properties. It doesn't need to be an actual instance of the class.</p>
+<p>The above snippet typechecks is intended behavior. TypeScript is a structurally typed-language, which means that for two types to be compatible, they just need to have the same properties.</p>
+<p>In this case, an object is assignable to <code>Person</code> as long as it has the same properties. It doesn't need to have been created via <code>new Person()</code>.</p>
 <p>This is in stark constrast to languages like Java, where even two identical classes aren't assignable to each other.</p>
 <h2 id="json" tabindex="-1">JSON</h2>
 <p>I've seen this type being misused a few times this way:</p>
@@ -120,22 +120,34 @@ const person: Person = { name: 'john' };
     return fetch('/info').then(res =&gt; res.json())
 }
 </code></pre>
-<p>The <code>JSON</code> type is just the methods of the global <code>JSON</code> object, as in <code>{ parse(data: string): any, stringify(data: any): string }</code>.</p>
+<p>The <code>JSON</code> type is just the type of the global <code>JSON</code> object, as in <code>{ parse(data: string): any, stringify(data: any): string }</code>.
+There's really no value in using it.</p>
 <pre><code class="language-ts">// This typechecks, but makes no sense and probably isn't what was intended.
 const info = await fetchInfo();
 info.stringify(123);
 info.parse(&quot;123&quot;);
 </code></pre>
 <p>There isn't a &quot;JSON data&quot; type, simply because JSON is a way encoding JS objects, and not a type in itself.</p>
-<p>The correct way to type the previous function would be:</p>
+<p>The correct way to declare the previous function would be:</p>
 <pre><code class="language-ts">function fetchInfo(): Promise&lt;unknown&gt; {
+    return fetch('/info').then(res =&gt; res.json())
+}
+
+// or
+
+interface Info {
+    // ...
+}
+
+function fetchInfo(): Promise&lt;Info&gt; {
     return fetch('/info').then(res =&gt; res.json())
 }
 </code></pre>
 </main>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
-        <script src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/typescript.min.js"></script>
-        <script>hljs.highlightAll();</script>
+            <script foo="typescript" src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/typescript.min.js"></script>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+            <script>hljs.highlightAll();</script>
     </body>
 </html>

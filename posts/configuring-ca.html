@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/css/simple.css" />
+        <link rel="stylesheet" href="/css/styles.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/stackoverflow-dark.min.css">
+        <title>Configuring CodeArtifact in Node.js projects</title>
+    </head>
+    <body>
+        <main><h1 id="configuringcode" tabindex="-1">Configuring CodeArtifact in Node.js projects</h1>
+<p><a href="https://aws.amazon.com/codeartifact/">CodeArtifact</a> is AWS's &quot;Artifact Repository&quot; service. for our purposes today, it's a private npm registry. This post is not about why you'd want to use it, but how to make it less inconvenient.</p>
+<p>My problem with it is authentication. Even though there's an <code>aws codeartifact login</code> command, it sets npm's registry in <code>~/.npmrc</code>, which will affect all your projects.</p>
+<p>This is a short guide on how to use CodeArtifact on a per-project basis.</p>
+<h1 id="step1configurey" tabindex="-1">Step 1: Configure your project's .npmrc</h1>
+<p>Create an <code>.npmrc</code> file inside your project and put your CodeArtifact's repository URL in there, for example:</p>
+<pre><code>registry=https://dev-12345.d.codeartifact.us-east-2.amazonaws.com/npm/my-repository/
+</code></pre>
+<h1 id="step2writetheau" tabindex="-1">Step 2: Write the authentication script</h1>
+<p>The script below fetches credentials from CodeArtifact and stores them in you home directory's <code>~/.npmrc</code></p>
+<pre><code class="language-sh">#!/usr/bin/env bash
+
+set -e
+
+REGION=&quot;...&quot;
+DOMAIN_OWNER=&quot;...&quot;
+DOMAIN=&quot;...&quot;
+
+TOKEN=&quot;$(aws codeartifact get-authorization-token \
+	--region &quot;$REGION&quot; \
+	--domain-owner &quot;$DOMAIN_OWNER&quot; \
+	--domain &quot;$DOMAIN&quot; \
+	--query authorizationToken \
+	--output text)&quot;
+
+npm config set --location user &quot;$(npm config get --location project registry):_authToken=$TOKEN&quot;
+</code></pre>
+<p>Don't forget to set <code>REGION</code>, <code>DOMAIN_OWNER</code> and <code>DOMAIN</code> to the appropriate values for your CodeArtifact repo.</p>
+<p>To authenticate, just <code>cd</code> into your project and run the script.</p>
+</main>
+
+            <script foo="bash" src="https://unpkg.com/@highlightjs/cdn-assets@11.11.1/languages/bash.min.js"></script>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+            <script>hljs.highlightAll();</script>
+    </body>
+</html>
